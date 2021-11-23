@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/heartHeal.wav-ca19464a2d636288c96dcde64afca2ca.sample"
+
+[deps]
+
+source_file="res://Assets/Effects/heartHeal.wav"
+dest_files=[ "res://.import/heartHeal.wav-ca19464a2d636288c96dcde64afca2ca.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

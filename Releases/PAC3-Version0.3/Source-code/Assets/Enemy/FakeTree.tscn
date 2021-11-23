@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Hitbox-Hurtbox/Hurtbox.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/World/StaticObjects/Tree.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Enemy/FakeTree.gd" type="Script" id=3]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 9.73048
+height = 10.2275
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 8.02369
+
+[node name="FakeTree" type="StaticBody2D"]
+position = Vector2( 0.625, -0.5 )
+collision_mask = 3
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 4.87499, -21.625 )
+rotation = 0.201662
+scale = Vector2( 1.2, 1.2 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.750004, -2.875 )
+rotation = 0.251965
+shape = SubResource( 1 )
+
+[node name="Hurtbox" parent="." instance=ExtResource( 1 )]
+position = Vector2( 0, 22.125 )
+collision_layer = 16
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2( 0.625, -28.5751 )
+rotation = 0.272197
+shape = SubResource( 2 )
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]
+
+[editable path="Hurtbox"]
