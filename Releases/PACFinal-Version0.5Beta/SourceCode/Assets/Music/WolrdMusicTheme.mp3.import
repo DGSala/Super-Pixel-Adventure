@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/WolrdMusicTheme.mp3-f773712a539ba0f994b2b815f86d0b9f.mp3str"
+
+[deps]
+
+source_file="res://Assets/Music/WolrdMusicTheme.mp3"
+dest_files=[ "res://.import/WolrdMusicTheme.mp3-f773712a539ba0f994b2b815f86d0b9f.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

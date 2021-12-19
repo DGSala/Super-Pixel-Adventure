@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Assets/UI/BG-forest.png" type="Texture" id=1]
+[ext_resource path="res://Assets/UI/Adventurer.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Assets/UI/GameCompleted.gd" type="Script" id=3]
+[ext_resource path="res://Assets/Music/victory sting.ogg" type="AudioStream" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 23
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 2 )
+
+[node name="GameCompleted" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 1.17743, 1 )
+texture = ExtResource( 1 )
+centered = false
+region_rect = Rect2( 0, 0, 320, 0 )
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+margin_right = 320.0
+margin_bottom = 160.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 72.0
+margin_top = 42.0
+margin_right = 247.0
+margin_bottom = 118.0
+
+[node name="CenterContainer" type="CenterContainer" parent="CenterContainer/VBoxContainer"]
+margin_right = 175.0
+margin_bottom = 24.0
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer/CenterContainer"]
+margin_right = 175.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.996078, 1, 0, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Game Completed"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 175.0
+margin_bottom = 76.0
+
+[node name="CenterContainer" type="CenterContainer" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+margin_right = 175.0
+margin_bottom = 22.0
+
+[node name="Return" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/CenterContainer"]
+margin_left = 17.0
+margin_right = 157.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color_hover = Color( 0.0470588, 0.0705882, 0.741176, 1 )
+text = "Return Main Menu"
+flat = true
+
+[node name="CenterContainer2" type="CenterContainer" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 175.0
+margin_bottom = 48.0
+
+[node name="Exit" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/CenterContainer2"]
+margin_left = 68.0
+margin_right = 106.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color_hover = Color( 0.0470588, 0.0705882, 0.741176, 1 )
+text = "Exit"
+flat = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -10.0
+autoplay = true
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/CenterContainer/Return" to="." method="_on_Return_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/CenterContainer2/Exit" to="." method="_on_Exit_pressed"]

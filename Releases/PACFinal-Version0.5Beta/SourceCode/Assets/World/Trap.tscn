@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Enemy/Zombie.tscn" type="PackedScene" id=2]
+
+[node name="Trap" type="Node2D"]
+
+[node name="YSort" type="YSort" parent="."]
+
+[node name="Zombie" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( 16.9813, -112.306 )
+
+[node name="Zombie2" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( -72.7427, -121.217 )
+
+[node name="Zombie3" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( -22.2927, -130.242 )

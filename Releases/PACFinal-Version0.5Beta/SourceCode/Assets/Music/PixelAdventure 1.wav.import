@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/PixelAdventure 1.wav-4988d120f44e5c8743a621b6f36f4ca7.sample"
+
+[deps]
+
+source_file="res://Assets/Music/PixelAdventure 1.wav"
+dest_files=[ "res://.import/PixelAdventure 1.wav-4988d120f44e5c8743a621b6f36f4ca7.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/dashSound.wav-15e5f7778f5189e819a54225c3869490.sample"
+
+[deps]
+
+source_file="res://Assets/Effects/dashSound.wav"
+dest_files=[ "res://.import/dashSound.wav-15e5f7778f5189e819a54225c3869490.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

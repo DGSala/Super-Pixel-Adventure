@@ -1,0 +1,223 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Assets/Shadows/ShadowSmall.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Hitbox-Hurtbox/Hurtbox.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Hitbox-Hurtbox/Hitbox.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Effects/EnemyBlinkEffect.shader" type="Shader" id=6]
+[ext_resource path="res://Assets/Global/Stats.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/Hitbox-Hurtbox/DetectionZone.tscn" type="PackedScene" id=8]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends KinematicBody2D
+
+const DeathEffect = preload(\"res://Assets/Effects/DeathEffect.tscn\")
+
+export(int) var MAX_SPEED = 50
+export(int) var ACCELERATION = 100
+export(int) var FRICTION = 400
+export(int) var PUSH = 150
+
+#AI states
+enum{
+	IDLE,
+	CHASE
+}
+
+var pushMove = Vector2.ZERO
+var state = IDLE
+var motion = Vector2.ZERO
+
+onready var stats = $Stats
+onready var hurtbox = $Hurtbox
+onready var blinkAnimation = $BlinkAnimation
+onready var detectionZone = $DetectionZone
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta):
+	pushMove = pushMove.move_toward(Vector2.ZERO, FRICTION * delta)
+	pushMove = move_and_slide(pushMove)
+	match state:
+		IDLE:
+			# Stop movement
+			motion = motion.move_toward(Vector2.ZERO, FRICTION * delta)
+			look_for_player()
+		CHASE:
+			# If player is detected, chase player, else return to IDLE
+			if detectionZone.player_detected():
+				chase(detectionZone.player.global_position, delta)
+			else:
+				state = IDLE
+	motion = move_and_slide(motion)
+
+
+func _on_Stats_no_health():
+	load_death_effect()
+	queue_free()
+
+func load_death_effect():
+	var deathEffect = DeathEffect.instance()
+	get_parent().add_child(deathEffect)
+	deathEffect.global_position = global_position
+
+func _on_Hurtbox_area_entered(area):
+	stats.health -= area.swordDamage
+	hurtbox.load_hit_effect()
+	hurtbox.start_invincibility(0.5)
+	blinkAnimation.play(\"Start\")
+	pushMove = area.pushMove_direction * PUSH
+
+
+func _on_Hurtbox_end_invincibility():
+	blinkAnimation.play(\"Stop\")
+
+# If player enters detection zone, change state to CHASE
+func look_for_player():
+	if detectionZone.player_detected():
+		state = CHASE
+
+func chase(target, delta):
+	go_to_point(target, delta)
+
+# Move enemy to some point
+func go_to_point(point, delta):
+	# Save point position
+	var direction = global_position.direction_to(point)
+	motion = motion.move_toward(direction * MAX_SPEED, ACCELERATION * delta)
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 6 )
+shader_param/blinking = false
+
+[sub_resource type="StreamTexture" id=3]
+load_path = "res://.import/Zombie.png-79e8232855d468df1b39d204546ff7a4.stex"
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = SubResource( 3 )
+region = Rect2( 0, 0, 16, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = SubResource( 3 )
+region = Rect2( 16, 0, 16, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = SubResource( 3 )
+region = Rect2( 32, 0, 16, 32 )
+
+[sub_resource type="SpriteFrames" id=7]
+animations = [ {
+"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "Animation",
+"speed": 4.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=8]
+radius = 4.15228
+height = 5.16518
+
+[sub_resource type="CapsuleShape2D" id=9]
+radius = 3.4754
+height = 6.13215
+
+[sub_resource type="CapsuleShape2D" id=10]
+radius = 6.85978
+height = 10.4883
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 100.0
+
+[sub_resource type="Animation" id=12]
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/blinking")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=13]
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:material:shader_param/blinking")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[node name="Zombie" type="KinematicBody2D"]
+collision_layer = 8
+collision_mask = 9
+script = SubResource( 1 )
+MAX_SPEED = 30
+ACCELERATION = 50
+PUSH = 100
+
+[node name="Shadow" type="Sprite" parent="."]
+position = Vector2( 0, 8.606 )
+texture = ExtResource( 3 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 2 )
+frames = SubResource( 7 )
+animation = "Animation"
+frame = 2
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 3.8147e-06, 7.44563 )
+shape = SubResource( 8 )
+
+[node name="Stats" parent="." instance=ExtResource( 7 )]
+
+[node name="Hitbox" parent="." instance=ExtResource( 5 )]
+collision_mask = 4
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2( 0.19339, 7.63902 )
+shape = SubResource( 9 )
+
+[node name="Hurtbox" parent="." instance=ExtResource( 4 )]
+collision_layer = 16
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2( 0, 3.77117 )
+shape = SubResource( 10 )
+
+[node name="DetectionZone" parent="." instance=ExtResource( 8 )]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="DetectionZone" index="0"]
+shape = SubResource( 11 )
+
+[node name="BlinkAnimation" type="AnimationPlayer" parent="."]
+anims/Start = SubResource( 12 )
+anims/Stop = SubResource( 13 )
+
+[connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]
+[connection signal="end_invincibility" from="Hurtbox" to="." method="_on_Hurtbox_end_invincibility"]
+
+[editable path="Hitbox"]
+[editable path="Hurtbox"]
+[editable path="DetectionZone"]
